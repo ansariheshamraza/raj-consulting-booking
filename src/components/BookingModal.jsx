@@ -71,7 +71,7 @@ export default function BookingModal({ isOpen, onClose }) {
         throw new Error(result.error || `Server error: ${response.status}`);
       }
 
-      setSuccessMessage(result.message || 'Booking confirmed! Check your email (heshamansari671@gmail.com) for details.');
+      setSuccessMessage(result.message || 'Booking confirmed! Check your email for confirmation details.');
       reset();
       setTimeout(() => {
         setSuccessMessage('');

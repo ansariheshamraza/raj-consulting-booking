@@ -22,12 +22,21 @@ export default function Header({ onBookingClick }) {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 bg-white transition-shadow ${
-        hasScrolled ? 'shadow-sm border-b border-slate-200' : ''
+        hasScrolled ? 'shadow-md border-b border-slate-200' : ''
       }`}
     >
-      <nav className="max-w-6xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <h3 className="text-xl font-semibold text-slate-900">Raj Consulting</h3>
+      <nav className="max-w-6xl mx-auto px-4 md:px-8 py-3 md:py-4 flex items-center justify-between">
+        {/* Logo and Brand */}
+        <div className="flex items-center gap-3">
+          <img
+            src="/assets/header-logo.png"
+            alt="Raj Consulting Logo"
+            className="h-10 md:h-12 w-auto"
+          />
+          <span className="text-lg md:text-xl font-semibold text-slate-900">
+            Raj Consulting
+          </span>
+        </div>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
@@ -57,18 +66,10 @@ export default function Header({ onBookingClick }) {
           </button>
         </div>
 
-        {/* Book Now Button */}
-        <button
-          onClick={onBookingClick}
-          className="bg-slate-900 text-white px-6 py-2 rounded-md hover:bg-slate-800 text-sm font-medium transition"
-        >
-          Book Now
-        </button>
-
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden ml-4 text-slate-900"
+          className="md:hidden text-slate-900"
         >
           <svg
             className="w-6 h-6"
