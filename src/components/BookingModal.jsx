@@ -59,7 +59,9 @@ export default function BookingModal({ isOpen, onClose }) {
       // Check if response is JSON
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Server returned non-JSON response. Make sure backend is running on port 5000.');
+        const text = await response.text();
+        console.error('Response body:', text);
+        throw new Error('API error: Server returned non-JSON response. Check browser console for details.');
       }
       
       const result = await response.json();
