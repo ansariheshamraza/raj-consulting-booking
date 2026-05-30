@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
 // Initialize Firebase Admin (only once)
 if (!admin.apps.length) {
@@ -16,6 +17,15 @@ const db = admin.firestore();
 
 // Initialize Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Initialize Gmail transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -88,11 +98,11 @@ module.exports = async (req, res) => {
       // Send emails using Resend SDK
       let emailsSent = { user: false, admin: false };
 
-      // Email 1: Send confirmation to USER (entered email)
+      // Email 1: Send confirmation to USER (entered email) using Gmail
       console.log('Sending confirmation email to user:', email);
       try {
-        const userEmailResult = await resend.emails.send({
-          from: 'onboarding@resend.dev',
+        await transporter.sendMail({
+          from: `"Raj Consulting" <${process.env.GMAIL_USER}>`,
           to: email,
           subject: 'Booking Confirmation - Raj Consulting',
           html: `
@@ -112,11 +122,10 @@ module.exports = async (req, res) => {
             </div>
           `,
         });
-        console.log('✅ User confirmation email sent:', userEmailResult.data?.id);
+        console.log('✅ User confirmation email sent to:', email);
         emailsSent.user = true;
       } catch (userEmailError) {
         console.error('❌ User email failed:', userEmailError.message);
-        console.log('   Note: Resend test mode only allows sending to verified email');
       }
 
       // Email 2: Send notification to ADMIN
