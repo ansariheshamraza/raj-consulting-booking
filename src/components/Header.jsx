@@ -28,11 +28,9 @@ export default function Header({ onBookingClick }) {
       <nav className="max-w-6xl mx-auto px-4 md:px-8 py-3 md:py-4 flex items-center justify-between">
         {/* Logo and Brand */}
         <div className="flex items-center gap-3">
-          <img
-            src="/assets/header-logo.png"
-            alt="Raj Consulting Logo"
-            className="h-10 md:h-12 w-auto"
-          />
+          <div className="h-10 md:h-12 w-10 md:w-12 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+            RC
+          </div>
           <span className="text-lg md:text-xl font-semibold text-slate-900">
             Raj Consulting
           </span>
