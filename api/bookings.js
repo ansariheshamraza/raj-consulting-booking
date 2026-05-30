@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 const { Resend } = require('resend');
 const nodemailer = require('nodemailer');
+const { sendTelegramNotification } = require('./telegram-notify');
 
 // Initialize Firebase Admin (only once)
 if (!admin.apps.length) {
@@ -95,8 +96,9 @@ module.exports = async (req, res) => {
 
       console.log('Booking saved:', docRef.id);
 
-      // Send emails using Resend SDK
+      // Send emails and Telegram notification
       let emailsSent = { user: false, admin: false };
+      let telegramSent = false;
 
       // Email 1: Send confirmation to USER (entered email) using Gmail
       console.log('Sending confirmation email to user:', email);
@@ -195,6 +197,23 @@ module.exports = async (req, res) => {
         console.error('❌ Admin email failed:', adminEmailError.message);
       }
 
+      // Telegram 3: Send notification to Telegram
+      console.log('Sending Telegram notification');
+      try {
+        telegramSent = await sendTelegramNotification({
+          name,
+          email,
+          phone,
+          service,
+          date,
+          time,
+          message,
+          bookingId: docRef.id,
+        });
+      } catch (telegramError) {
+        console.error('❌ Telegram notification failed:', telegramError.message);
+      }
+
       // Return success response
       const responseMessage = emailsSent.admin 
         ? 'Booking confirmed! Check your email for details.'
@@ -205,6 +224,7 @@ module.exports = async (req, res) => {
         message: responseMessage,
         bookingId: docRef.id,
         emailsSent,
+        telegramSent,
       });
     } catch (error) {
       console.error('Error processing booking:', error);
